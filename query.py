@@ -17,13 +17,15 @@ def get_wiki_search_result(term, mode=0):
     else:
         return wikipedia.search(term)
 
-def get_wiki_search_result_batch(terms, mode=0):
+def thread_fx(terms, number):
     dirs = "tmp"
-    if not os.path.exists(dirs):
-        os.makedirs(dirs)
-
-    with open(f"{dirs}/phrase-wiki-search-results-{mode}-query.txt", 'w') as fw:    
+    mode = 1
+    with open(f"{dirs}/phrase-wiki-search-results-{mode}-query-{number}.txt", 'w') as fw:  
+        print('Terms length (get_wiki_search_result_batch): ', len(terms))  
+        i = 0
         for w in terms:
+            i += 1
+            print('Word ', i)
             rets = []
             try:
                 rets = get_wiki_search_result(w, mode)
@@ -31,9 +33,28 @@ def get_wiki_search_result_batch(terms, mode=0):
                 pass
             print(w, '\t'.join(rets), sep='\t', file=fw)
 
+# multi threaded wiki search result fetch method
+def get_wiki_search_result_batch(terms, mode=0):
+    dirs = "tmp"
+    if not os.path.exists(dirs):
+        os.makedirs(dirs)
+
+    # every thread is running queries on 8000 terms
+    threads = []
+    for i in range(10):
+        t = threading.Thread(target=thread_fx, args=(terms[i*8000: (i+1)*8000],i))
+        threads.append(t)
+        t.start()
+    
+    for thread in threads:
+        thread.join()
+
+
 def print_results(terms, scores, phrase_id):
     for w in terms:
-        print(f"{w}: {scores[phrase_id[w]]}")
+        if(phrase_id[w] < len(scores)):
+            print(f"{w}: {scores[phrase_id[w]]}")
+
 
 # build core-anchored semantic graph with queries
 def get_term_graph_with_query(core_nodes, phrase_id, domain, max_in_degree=5, additional_link=True):
@@ -126,25 +147,11 @@ def parse_args():
     
 
 def main(args):
-    query_terms = [
-        "machine learning",
-        "few-shot learning",
-        "long-short term memory",
-        "social network",
-        "frequency assignment problem",
-        "data sparseness",
-        "large neighborhood search",
-        "multi-hop wireless networks",
-        "signal prediction",
-        "molecule",
-        "gravity",
-        "animism",
-        "backflow",
-        "calcite",
-        "supply and demand",
-        "hellbent on compromise",
-        "anatahan"
-    ]
+    # open the file generated as auto phrase output
+    f = open("input.txt", "r")
+    query_terms = f.read()
+    f.close()
+    query_terms = eval(query_terms)
 
     print("Domain:", args.domain)
     print("Method:", args.method)
@@ -169,7 +176,8 @@ def main(args):
             phrase_id[w] = tid
             phrases.append(w)
             tid += 1
-
+    
+    # comment following 2 lines after first run
     get_wiki_search_result_batch(phrases[TID:], mode=0)
     get_wiki_search_result_batch(phrases[TID:], mode=1)
     

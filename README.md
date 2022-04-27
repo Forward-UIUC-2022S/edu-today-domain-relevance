@@ -144,10 +144,10 @@ NOTE: please make sure that if you are running on a device which contains a GPU,
 
 ```
 # to build a docker image:
-docker build .
+docker build -t dom_rel_image .
 
 # to run the docker image
-docker run <image-id>
+docker run dom_rel_image
 ```
 
 ## Citation

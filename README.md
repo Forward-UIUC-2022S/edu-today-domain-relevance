@@ -138,6 +138,17 @@ Sample results for *Machine Learning*:
 ![image-20210528201345177](figure/term-list-ml.png)
 
 
+## Docker:
+The entire build and run process can be done using docker. 
+NOTE: please make sure that if you are running on a device which contains a GPU, follow the steps listed in https://www.cloudsavvyit.com/14942/how-to-use-an-nvidia-gpu-with-docker-containers/ to modify the dockerfile
+
+```
+# to build a docker image:
+docker build .
+
+# to run the docker image
+docker run <image-id>
+```
 
 ## Citation
 

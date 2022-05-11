@@ -1,5 +1,14 @@
 # README
 
+### NOTE: This repository has been modified to work in cohesion with ( https://github.com/Forward-UIUC-2021F/chen-si-domain-relevant-keyword-extraction/tree/automation-module ) repository
+
+
+## Remaining work:
+- Connect the docker images for (https://github.com/Forward-UIUC-2022S/edu-today-AutoPhrase) and (https://github.com/Forward-UIUC-2022S/edu-today-AutoPhrase) as described in ( https://github.com/Forward-UIUC-2021F/chen-si-domain-relevant-keyword-extraction/tree/automation-module ) so that everything can be run with a single command
+- Right now, Autophrase has its seperate dockerfile and domain-relevance has its own dockerfile.
+- Additionally, the functionality of docker image in domain-relevance is not tested with systems with graphics card and might need to be modified
+
+\
 The coda and data for "[Measuring Fine-Grained Domain Relevance of Terms: A Hierarchical Core-Fringe Approach](https://arxiv.org/abs/2105.13255)" (ACL '21)
 
 
